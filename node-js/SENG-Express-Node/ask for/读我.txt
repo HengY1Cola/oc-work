@@ -1,0 +1,9 @@
+代码在gitlab上面 PDF需求只有很简单的一页纸
+具体代码量有多少只能你们去git上看
+只需要assignment1 PDF也提到了2 但是不用管
+
+https://eng-git.canterbury.ac.nz/seng365-2024/yli431/-/tree/main?ref_type=heads
+yli431
+password：v7t4z8E5
+
+直接搜索your code goes here, 就能看到需要自己补全的东西有多少
