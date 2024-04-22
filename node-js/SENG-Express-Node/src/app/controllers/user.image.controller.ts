@@ -15,6 +15,7 @@ const getImage = async (req: Request, res: Response): Promise<void> => {
             respCustom(res, 404, "No user with specified ID, or user has no image").send();
             return;
         }
+        res.setHeader('Content-Type', "image/jpeg");
         respCustom(res, 200, "OK").json({filename: user.image_filename}).send();
         return;
     } catch (err) {
@@ -61,7 +62,7 @@ const setImage = async (req: Request, res: Response): Promise<void> => {
         if (user.image_filename === "") {
             respCustom(res, 201, "Created. New image created").json({filename: imageFilename}).send();
         } else {
-            respCustom(res, 200, "OK. Image updated").json({filename: imageFilename}).send();
+            respCustom(res, 201, "OK. Image updated").json({filename: imageFilename}).send();
         }
     } catch (err) {
         Logger.error(err);

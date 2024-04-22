@@ -1,0 +1,101 @@
+2024-04-22 14:51:26:5126 [31merror[39m: [31mENOENT: no such file or directory, scandir './storage/images/'[39m
+2024-04-22 14:51:26:5126 [31merror[39m: [31mINSERT INTO `user` (`email`, `first_name`, `last_name`, `image_filename`, `password`) VALUES ('k@gmail.com', 'Kristy', 'Lincoln', 'user_1.jpg', 'e08a5a1878c36974'), ('c.anagonye@stjohns.edu.au', 'Chidi', 'Anagonye', 'user_2.png', 'e08a5a1878c36974'), ('tahani.aljamil@ox.ac.uk', 'Tahani', 'Al-Jamil', 'user_3.gif', 'e08a5a1878c36974'), ('e.shellstrop@hotmail.com', 'Eleanor', 'Shellstrop', 'user_4.jpg', 'e08a5a1878c36974'), ('B@gmail.com', 'Fernando', 'Brown', 'user_5.jpg', 'e08a5a1878c36974'), ('jeh128@mail.nz', 'Jack', 'Chen', 'user_6.jpg', 'e08a5a1878c36974'), ('a@gmail.com', 'Amanda', 'Faria', 'user_7.PNG', 'e08a5a1878c36974'), ('zhe25@mail.nz', 'Henry', 'Krippner', 'user_8.gif', 'e08a5a1878c36974'), ('lfg23@mail.nz', 'Ella', 'Yellow', 'user_9.PNG', 'e08a5a1878c36974'), ('ama541@mail.nz', 'Finn', 'Veale', NULL, 'e08a5a1878c36974'), ('boooooortles@hotmail.com', 'Jason', 'Mendoza', 'user_11.jpg', 'e08a5a1878c36974'), ('mindystclaire@gmail.com', 'Mindy', 'St. Claire', NULL, 'e08a5a1878c36974'), ('s.garnett@stjohns.edu.au', 'Simone', 'Garnett', NULL, 'e08a5a1878c36974'), ('pillboi@ymail.com', 'Steven', 'Peleaz', NULL, 'e08a5a1878c36974'), ('larryhemsworth@gmail.com', 'Larry', 'Hemsworth', NULL, 'e08a5a1878c36974'), ('kamilah.aljamil@ox.ac.uk', 'Kamilah', 'Al-Jamil', NULL, 'e08a5a1878c36974'), ('johnwheaton@gmail.com', 'John', 'Wheaton', NULL, 'e08a5a1878c36974'), ('tane.mahuta@example.com', 'Tane', 'Taumata', NULL, 'e08a5a1878c36974'), ('bobbyjones@example.com', 'Bob', 'Jones', NULL, 'e08a5a1878c36974'), ('m@m.com', 'Morgan', 'English', 'user_20.jpeg', 'e08a5a1878c36974')[39m
+2024-04-22 14:51:26:5126 [31merror[39m: [31mDuplicate entry 'k@gmail.com' for key 'user.unique_key'[39m
+2024-04-22 14:51:27:5127 [31merror[39m: [31mENOENT: no such file or directory, scandir './storage/images/'[39m
+2024-04-22 14:54:21:5421 [31merror[39m: [31mENOENT: no such file or directory, scandir './storage/images/'[39m
+2024-04-22 15:00:00:00 [31merror[39m: [31mENOENT: no such file or directory, scandir './storage/images/'[39m
+2024-04-22 15:00:22:022 [31merror[39m: [31mENOENT: no such file or directory, scandir './storage/images/'[39m
+2024-04-22 15:01:18:118 [31merror[39m: [31mENOENT: no such file or directory, scandir './storage/images/'[39m
+2024-04-22 15:01:58:158 [31merror[39m: [31mENOENT: no such file or directory, scandir './storage/images/'[39m
+2024-04-22 15:02:32:232 [31merror[39m: [31mENOENT: no such file or directory, scandir './storage/images/'[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mUPDATE `user`[39m
+[31m                 SET `email`      = NULL,[39m
+[31m                     `first_name` = NULL,[39m
+[31m                     `last_name`  = NULL,[39m
+[31m                     `password`   = 'e08a5a1878c36974',[39m
+[31m                     WHERE `id` = NULL[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mYou have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE `id` = NULL' at line 6[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mUPDATE `user`[39m
+[31m                 SET `email`      = NULL,[39m
+[31m                     `first_name` = NULL,[39m
+[31m                     `last_name`  = NULL,[39m
+[31m                     `password`   = '567ceea376c2625e',[39m
+[31m                     WHERE `id` = NULL[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mYou have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE `id` = NULL' at line 6[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mUPDATE `user`[39m
+[31m                 SET `email`      = NULL,[39m
+[31m                     `first_name` = NULL,[39m
+[31m                     `last_name`  = NULL,[39m
+[31m                     `password`   = NULL,[39m
+[31m                     WHERE `id` = NULL[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mYou have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE `id` = NULL' at line 6[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mCannot read properties of null (reading 'id')[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mCannot read properties of null (reading 'ownerId')[39m
+2024-04-22 15:06:31:631 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 15:06:32:632 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 15:06:32:632 [31merror[39m: [31mCannot read properties of null (reading 'id')[39m
+2024-04-22 15:06:32:632 [31merror[39m: [31mINSERT INTO `supporter` (`petition_id`, `support_tier_id`, `user_id`, `message`, `timestamp`) VALUES (1, 1, 21, 'example message', '2024-04-22 15:06:32.452')[39m
+2024-04-22 15:06:32:632 [31merror[39m: [31mDuplicate entry '1-21' for key 'supporter.support_tier_id'[39m
+2024-04-22 22:58:18:5818 [31merror[39m: [31mUPDATE `user`[39m
+[31m                 SET `email`      = NULL,[39m
+[31m                     `first_name` = NULL,[39m
+[31m                     `last_name`  = NULL,[39m
+[31m                     `password`   = 'e08a5a1878c36974',[39m
+[31m                     WHERE `id` = NULL[39m
+2024-04-22 22:58:18:5818 [31merror[39m: [31mYou have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE `id` = NULL' at line 6[39m
+2024-04-22 22:58:18:5818 [31merror[39m: [31mUPDATE `user`[39m
+[31m                 SET `email`      = NULL,[39m
+[31m                     `first_name` = NULL,[39m
+[31m                     `last_name`  = NULL,[39m
+[31m                     `password`   = '567ceea376c2625e',[39m
+[31m                     WHERE `id` = NULL[39m
+2024-04-22 22:58:18:5818 [31merror[39m: [31mYou have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE `id` = NULL' at line 6[39m
+2024-04-22 22:58:18:5818 [31merror[39m: [31mUPDATE `user`[39m
+[31m                 SET `email`      = NULL,[39m
+[31m                     `first_name` = NULL,[39m
+[31m                     `last_name`  = NULL,[39m
+[31m                     `password`   = NULL,[39m
+[31m                     WHERE `id` = NULL[39m
+2024-04-22 22:58:18:5818 [31merror[39m: [31mYou have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE `id` = NULL' at line 6[39m
+2024-04-22 23:09:06:96 [31merror[39m: [31mUPDATE `user`[39m
+[31m                 SET `email`      = NULL,[39m
+[31m                     `first_name` = NULL,[39m
+[31m                     `last_name`  = NULL,[39m
+[31m                     `password`   = 'e08a5a1878c36974',[39m
+[31m                     WHERE `id` = NULL[39m
+2024-04-22 23:09:06:96 [31merror[39m: [31mYou have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE `id` = NULL' at line 6[39m
+2024-04-22 23:18:16:1816 [31merror[39m: [31mUPDATE `user`[39m
+[31m                 SET `email`      = 'mike.wheeler@hawkinsmiddle.school.us',[39m
+[31m                     `first_name` = 'Mike',[39m
+[31m                     `last_name`  = 'Wheeler',[39m
+[31m                     `password`   = '567ceea376c2625e',[39m
+[31m                     WHERE `id` = 21[39m
+2024-04-22 23:18:16:1816 [31merror[39m: [31mYou have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE `id` = 21' at line 6[39m
+2024-04-22 23:18:56:1856 [31merror[39m: [31mUPDATE `user`[39m
+[31m                 SET `email`      = 'mike.wheeler@hawkinsmiddle.school.us',[39m
+[31m                     `first_name` = 'Mike',[39m
+[31m                     `last_name`  = 'Wheeler',[39m
+[31m                     `password`   = '567ceea376c2625e',[39m
+[31m                     WHERE `id` = 21[39m
+2024-04-22 23:18:56:1856 [31merror[39m: [31mYou have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE `id` = 21' at line 6[39m
+2024-04-22 23:28:42:2842 [31merror[39m: [31mINSERT INTO `user` (`email`, `first_name`, `last_name`, `password`) VALUES ('jXeWxtnx9IBKwrL8vJCX8BjoIFaX0HP3pJGvFHsDRGg2QwKVSbVwg3NPwiwr0onEXIlz3oxaSvSsB2cgsnF7vzNSBaOtRe0YK5S6GI9SM7FFqQjYN5K9UZyeAlKT1hllaN5R0hymnKodY8v38jRdxhCU9NWcsTxViccsClLw18EJzX7q77f4yRMA5jOtWeCUHa7fs8UZWMb1XgyvCeo8e1JNmh73exNBMTB6KDx3NmaWqMYyZCr0q4w3ap1jdC1fz@example.com', 'John', 'Johnson', 'd6554cfc57b9c51d')[39m
+2024-04-22 23:28:42:2842 [31merror[39m: [31mData too long for column 'email' at row 1[39m
+2024-04-22 23:40:01:401 [31merror[39m: [31mCannot read properties of null (reading 'id')[39m
+2024-04-22 23:40:01:401 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 23:40:01:401 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 23:40:01:401 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 23:40:01:401 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 23:40:01:401 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 23:40:01:401 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 23:40:01:401 [31merror[39m: [31mCannot read properties of null (reading 'ownerId')[39m
+2024-04-22 23:40:01:401 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 23:40:01:401 [31merror[39m: [31mCannot use 'in' operator to search for 'title' in undefined[39m
+2024-04-22 23:40:02:402 [31merror[39m: [31mCannot read properties of null (reading 'id')[39m
+2024-04-22 23:40:02:402 [31merror[39m: [31mINSERT INTO `supporter` (`petition_id`, `support_tier_id`, `user_id`, `message`, `timestamp`) VALUES (1, 1, 21, 'example message', '2024-04-22 23:40:02.276')[39m
+2024-04-22 23:40:02:402 [31merror[39m: [31mDuplicate entry '1-21' for key 'supporter.support_tier_id'[39m

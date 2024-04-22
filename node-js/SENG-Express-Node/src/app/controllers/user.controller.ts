@@ -4,7 +4,7 @@ import {User} from "../models/user.model";
 import {
     generateJWT,
     respCustom,
-    validateEmailFormat,
+    validateEmailFormat, validateEmailLength,
     validatePasswordLength,
     validateRequiredFields, verifyToken
 } from "../services/utils";
@@ -26,7 +26,15 @@ const register = async (req: Request, res: Response): Promise<void> => {
             return;
         }
         const {firstName, lastName, email, password} = req.body;
+        if (firstName === "" || lastName === "") {
+            respCustom(res, 400, "Invalid information").send();
+            return;
+        }
         if (!validateEmailFormat(email)) {
+            respCustom(res, 400, "Invalid information").send();
+            return;
+        }
+        if (!validateEmailLength(email, 0, 100)) {
             respCustom(res, 400, "Invalid information").send();
             return;
         }
@@ -103,21 +111,30 @@ const logout = async (req: Request, res: Response): Promise<void> => {
 
 const view = async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = parseInt(req.params.id, 10);
-        if (isNaN(userId) || userId < 0) {
+        const reqUserId = parseInt(req.params.id, 10);
+        if (isNaN(reqUserId) || reqUserId < 0) {
             respCustom(res, 400, "Invalid information").send();
             return;
         }
-        const user = await findUserById(userId);
+        const user = await findUserById(reqUserId);
         if (!user) {
             respCustom(res, 404, "No user with specified ID").send();
             return;
         }
+        const token = req.headers['x-authorization'];
+        const {valid, userId} = await verifyToken(token.toString());
+        if (valid && userId === user.id) {
+            respCustom(res, 200, "OK").json({
+                firstName: user.first_name,
+                lastName: user.last_name,
+                email: user.email
+            }).send();
+            return
+        }
         respCustom(res, 200, "OK").json({
             firstName: user.first_name,
-            lastName: user.last_name,
-            email: user.email
-        }).send(); // 找到用
+            lastName: user.last_name
+        }).send();
     } catch (err) {
         Logger.error(err);
         respCustom(res, 500, "Internal Server Error").send();
@@ -137,6 +154,10 @@ const update = async (req: Request, res: Response): Promise<void> => {
             return;
         }
         const {firstName, lastName, email, password, currentPassword} = req.body;
+        if (!firstName && !lastName && !email && !password && !currentPassword) {
+            respCustom(res, 400, "Invalid information").send();
+            return;
+        }
         if (email && !validateEmailFormat(email)) {
             respCustom(res, 400, "Invalid information").send();
             return;
@@ -150,11 +171,20 @@ const update = async (req: Request, res: Response): Promise<void> => {
             respCustom(res, 404, "No user with specified ID").send();
             return;
         }
+        const hashedPassword = await hash(password);
+        if (hashedPassword === currentUser.password) {
+            respCustom(res, 403, "Same Password").send();
+            return;
+        }
         const updateUserData = {
-            ...(firstName ? {first_name: firstName} : {}),
-            ...(lastName ? {last_name: lastName} : {}),
-            ...(email ? {email} : {}),
-            ...(password && currentPassword ? {password: await hash(password)} : {}),
+            ...({id: currentUser.id}),
+            ...({auth_token: currentUser.auth_token}),
+            ...({image_filename: currentUser.image_filename}),
+            ...(firstName ? {first_name: firstName} : {first_name: currentUser.first_name}),
+            ...(lastName ? {last_name: lastName} : {last_name: currentUser.last_name}),
+            ...(email ? {email} : {email: currentUser.email}),
+            ...(email ? {email} : {email: currentUser.email}),
+            ...(password && currentPassword ? {password: hashedPassword} : {password: currentUser.password}),
         } as User
         const updated = await updateUser(updateUserData);
         if (updated) {

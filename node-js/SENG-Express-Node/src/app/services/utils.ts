@@ -24,8 +24,12 @@ const validateEmailFormat = (email: string): boolean => {
     return emailRegex.test(email);
 };
 
+const validateEmailLength = (email: string, minLength: number, maxLength: number): boolean => {
+    return email.length >= minLength && email.length <= maxLength;
+};
+
 const validatePasswordLength = (password: string): boolean => {
-    return password.length > 6;
+    return password.length >= 6;
 }
 
 interface JwtPayload {
@@ -64,5 +68,6 @@ export {
     validateEmailFormat,
     generateJWT,
     verifyToken,
-    validatePasswordLength
+    validatePasswordLength,
+    validateEmailLength
 }

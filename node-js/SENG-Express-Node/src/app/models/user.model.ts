@@ -101,8 +101,8 @@ const updateUser = async (updatedUser: User): Promise<boolean> => {
                  SET \`email\`      = ?,
                      \`first_name\` = ?,
                      \`last_name\`  = ?,
-                     \`password\`   = ?,
-                     WHERE \`id\` = ?`;
+                     \`password\`   = ?
+                     WHERE \`id\` = ?;`;
     try {
         await getPool().query(sql, [
             updatedUser.email,
