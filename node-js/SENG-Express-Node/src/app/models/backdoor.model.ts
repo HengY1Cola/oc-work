@@ -15,11 +15,11 @@ const resetDb = async (): Promise<any> => {
     Logger.info("Resetting Database...");
     promises.push(getPool().query(sql));  // sync call to recreate DB
 
-    const files = await fs.readdir(imageDirectory);
-    Logger.info("Get imageDirectory");
-    for (const file of files) {
-        if (file !== '.gitkeep') promises.push(fs.unlink(imageDirectory + file));  // sync call to delete photo
-    }
+    // const files = await fs.readdir(imageDirectory);
+    // Logger.info("Get imageDirectory");
+    // for (const file of files) {
+    //     if (file !== '.gitkeep') promises.push(fs.unlink(imageDirectory + file));  // sync call to delete photo
+    // }
 
     return Promise.all(promises);  // async wait for DB recreation and images to be deleted
 };

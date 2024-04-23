@@ -11,7 +11,7 @@ const respCustom = (resp: Response, code: number, msg: string): Response => {
 
 // Function to validate required fields
 const validateRequiredFields = (req: Request, fields: string[]): { valid: boolean, missingFields: string[] } => {
-    const missingFields = fields.filter(field => !(field in req.body));
+    const missingFields = fields.filter(field => !(field in req));
     return {
         valid: missingFields.length === 0,
         missingFields,

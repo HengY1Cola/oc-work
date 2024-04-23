@@ -49,7 +49,8 @@ const setImage = async (req: Request, res: Response): Promise<void> => {
         //     req.on('end', () => resolve(data));
         //     req.on('error', (err) => reject(err));
         // });
-        const imageFilename = `user_${userId}_${Math.floor(Date.now() / 1000)}.${contentType.split('/')[1]}`;
+        // const imageFilename = `user_${userId}_${Math.floor(Date.now() / 1000)}.${contentType.split('/')[1]}`;
+        const imageFilename = `demo.${contentType.split('/')[1]}`;
         const user = await findUserById(userId);
         if (!user) {
             respCustom(res, 404, "No such user with ID given").send();

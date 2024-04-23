@@ -16,16 +16,16 @@ function aggregateData(petitions: Petition[], supportTiers: SupportTier[], suppo
         return acc;
     }, new Map<number, Supporter[]>());
     return petitions.map(petition => {
-        const tiers = supportTiersByPetition.get(petition.id) || [];
+        const tiers = supportTiersByPetition.get(petition.petitionId) || [];
         const tiersWithSupporters = tiers.map(tier => ({
             ...tier,
             supporterList: supportersBySupportTier.get(tier.id) || []
         }));
-        const supportingCost = tiers.reduce((acc, tier) => acc + tier.cost, 0);
+        const supportingCost = tiersWithSupporters.reduce((acc, each) => acc + (each.supporterList.length === 0 ? 0 : each.cost), 0);
         return {
             ...petition,
             tierList: tiersWithSupporters,
-            SupportingCost: supportingCost
+            supportingCost
         };
     });
 }
@@ -35,15 +35,19 @@ interface FilterCriteria {
     supportingCost?: number;
     ownerId?: number;
     supporterId?: number;
+    categoryIdsList?: number[];
 }
 
 function filterPetitions(petitions: Petition[], criteria: FilterCriteria): Petition[] {
+    if (criteria.categoryIdsList.length === 0 && !criteria.q && !criteria.ownerId && !criteria.supporterId && !criteria.supportingCost) {
+        return petitions;
+    }
     return petitions.filter(petition => {
-        if (criteria.q && !(petition.title.includes(criteria.q) || petition.description.includes(criteria.q))) {
+        if (criteria.q && !(petition.title.toLowerCase().includes(criteria.q) || petition.description.toLowerCase().includes(criteria.q))) {
             return false;
         }
-        if (criteria.supportingCost !== undefined && petition.SupportingCost > criteria.supportingCost) {
-            return false;
+        if (criteria.supportingCost !== undefined) {
+            return petition.tierList.some(element => element.cost <= criteria.supportingCost);
         }
         if (criteria.ownerId && petition.ownerId !== criteria.ownerId) {
             return false;
@@ -55,28 +59,36 @@ function filterPetitions(petitions: Petition[], criteria: FilterCriteria): Petit
                 return false;
             }
         }
-        return true;
+        return !(criteria.categoryIdsList.length !== 0 && !criteria.categoryIdsList.includes(petition.categoryId));
     });
 }
 
 function sortPetitions(petitions: Petition[], sortBy: string): Petition[] {
     return petitions.sort((a, b) => {
+        let primaryComparison = 0;
         switch (sortBy) {
             case 'ALPHABETICAL_ASC':
-                return a.title.localeCompare(b.title);
+                primaryComparison = a.title.localeCompare(b.title);
+                break;
             case 'ALPHABETICAL_DESC':
-                return b.title.localeCompare(a.title);
+                primaryComparison = b.title.localeCompare(a.title);
+                break;
             case 'COST_ASC':
-                return a.SupportingCost - b.SupportingCost;
+                primaryComparison = a.supportingCost - b.supportingCost;
+                break;
             case 'COST_DESC':
-                return b.SupportingCost - a.SupportingCost;
+                primaryComparison = b.supportingCost - a.supportingCost;
+                break;
             case 'CREATED_ASC':
-                return new Date(a.creationDate).getTime() - new Date(b.creationDate).getTime();
+                primaryComparison = new Date(a.creationDate).getTime() - new Date(b.creationDate).getTime();
+                break;
             case 'CREATED_DESC':
-                return new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime();
+                primaryComparison = new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime();
+                break;
             default:
-                return new Date(a.creationDate).getTime() - new Date(b.creationDate).getTime();
+                throw new Error("no type")
         }
+        return primaryComparison === 0 ? a.petitionId - b.petitionId : primaryComparison;
     });
 }
 

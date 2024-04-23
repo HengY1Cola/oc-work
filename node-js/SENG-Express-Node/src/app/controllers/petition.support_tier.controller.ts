@@ -26,7 +26,7 @@ const addSupportTier = async (req: Request, res: Response): Promise<void> => {
             respCustom(res, 403, "Only the owner of a petition may modify it").send();
             return
         }
-        const existingTiers = await findSupportTiersByPetitionId(petition.id);
+        const existingTiers = await findSupportTiersByPetitionId(petition.petitionId);
         if (existingTiers.length >= 3) {
             respCustom(res, 403, "Can add a support tier if 3 already exist").send();
             return
@@ -37,7 +37,7 @@ const addSupportTier = async (req: Request, res: Response): Promise<void> => {
             return;
         }
         const newSupportTier: SupportTier = {
-            petition_id: petition.id,
+            petition_id: petition.petitionId,
             title,
             description,
             cost
@@ -143,7 +143,7 @@ const deleteSupportTier = async (req: Request, res: Response): Promise<void> => 
             respCustom(res, 403, "Can not delete a support tier if a supporter already exists for it").send();
             return;
         }
-        const existingTiers = await findSupportTiersByPetitionId(petition.id);
+        const existingTiers = await findSupportTiersByPetitionId(petition.petitionId);
         if (existingTiers.length === 1) {
             respCustom(res, 403, "Can not remove a support tier if it is the only one for a petitiont").send();
             return;

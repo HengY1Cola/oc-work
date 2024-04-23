@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import Logger from '../../config/logger';
-import {respCustom, validateRequiredFields} from "../services/utils";
+import {respCustom, validateEmailLength, validateRequiredFields} from "../services/utils";
 import {
     addPetitionModel, deletePetitionById,
     doesPetitionExistByTitle,
@@ -16,13 +16,29 @@ import {findUserById} from "../models/user.model";
 
 const getAllPetitions = async (req: Request, res: Response): Promise<void> => {
     try {
-        const {startIndex = 0, count = 10, q, supportingCost, ownerId, supporterId} = req.query;
+        const {startIndex = 0, count = 100, q, supportingCost, ownerId, supporterId} = req.query;
         const startIndexInt = parseInt(String(startIndex), 10);
         const countInt = parseInt(String(count), 10);
         if (startIndexInt < 0 || countInt < 0) {
             respCustom(res, 400, "Bad Request").send();
             return;
         }
+        if (q !== undefined && q === '') {
+            respCustom(res, 400, "Bad Request").send();
+            return;
+        }
+        if (supporterId !== undefined && !/^\d+$/.test(supporterId as string)) {
+            respCustom(res, 400, "Bad Request").send();
+            return;
+        }
+        const categoryIdsRaw = req.query.categoryIds;
+        let categoryIdsList: number[] = [];
+        if (Array.isArray(categoryIdsRaw)) {
+            categoryIdsList = categoryIdsRaw.map(id => parseInt(id as string, 10));
+        } else if (categoryIdsRaw) {
+            categoryIdsList = [parseInt(categoryIdsRaw as string, 10)];
+        }
+
         let petitions = await findAllPetitions();
         const supportTiers = await findAllSupportTiers();
         const supporters = await findAllSupporters();
@@ -33,6 +49,7 @@ const getAllPetitions = async (req: Request, res: Response): Promise<void> => {
             supportingCost: supportingCost ? parseInt(supportingCost as string, 10) : undefined,
             ownerId: ownerId ? parseInt(ownerId as string, 10) : undefined,
             supporterId: supporterId ? parseInt(supporterId as string, 10) : undefined,
+            categoryIdsList: categoryIdsList ? categoryIdsList : undefined,
         };
         let filteredPetitions = filterPetitions(petitions, filterCriteria);
         const sortByRaw = req.query.sortBy || 'CREATED_ASC';
@@ -49,7 +66,12 @@ const getAllPetitions = async (req: Request, res: Response): Promise<void> => {
         } else {
             sortBy = 'CREATED_ASC';
         }
-        filteredPetitions = sortPetitions(filteredPetitions, sortBy);
+        try {
+            filteredPetitions = sortPetitions(filteredPetitions, sortBy);
+        } catch (e) {
+            respCustom(res, 400, "Sort type err").send();
+            return;
+        }
         const paginatedPetitions = paginatePetitions(filteredPetitions, startIndexInt, countInt);
         respCustom(res, 200, "OK").json({
             petitions: paginatedPetitions,
@@ -73,6 +95,10 @@ const getPetition = async (req: Request, res: Response): Promise<void> => {
         }
 
         const petitionsOne = await findPetitionById(petitionId);
+        if (!petitionsOne) {
+            respCustom(res, 404, "No Found").send();
+            return;
+        }
         let petitions: Petition[] = [petitionsOne]
         const supportTiers = await findAllSupportTiers();
         const supporters = await findAllSupporters();
@@ -89,9 +115,9 @@ const getPetition = async (req: Request, res: Response): Promise<void> => {
         }
         const result = {
             description: petition.description,
-            moneyRaised: petition.SupportingCost,
+            moneyRaised: petition.supportingCost,
             supportTiers: petition.tierList,
-            petitionId: petition.id,
+            petitionId: petition.petitionId,
             title: petition.title,
             categoryId: petition.categoryId,
             ownerId: petition.ownerId,
@@ -117,7 +143,11 @@ const addPetition = async (req: Request, res: Response): Promise<void> => {
             respCustom(res, 400, "Bad Request").send();
             return;
         }
-        if (!Array.isArray(supportTiers) || supportTiers.some(tier => !validateRequiredFields(tier, ['title', 'description']) || tier.cost < 0)) {
+        if (title === "") {
+            respCustom(res, 400, "Bad Request").send();
+            return;
+        }
+        if (!Array.isArray(supportTiers) || supportTiers.some(tier => !validateRequiredFields(tier, ['title', 'description']) || tier.cost === undefined || tier.cost < 0)) {
             respCustom(res, 400, "Bad Request").send();
             return;
         }
@@ -130,12 +160,13 @@ const addPetition = async (req: Request, res: Response): Promise<void> => {
             respCustom(res, 400, "Bad Request").send();
             return;
         }
-        if (await doesPetitionExistByTitle(title)) {
+        const isPetitionExist = await doesPetitionExistByTitle(title);
+        if (isPetitionExist) {
             respCustom(res, 403, "Petition title already exists").send();
             return;
         }
         for (const tier of supportTiers) {
-            if (await doesSupportTierExistByTitle(tier.title)) {
+            if (isPetitionExist && await doesSupportTierExistByTitle(tier.title)) {
                 respCustom(res, 400, `Support tier title '${tier.title}' already exists`).send();
                 return;
             }
@@ -150,7 +181,7 @@ const addPetition = async (req: Request, res: Response): Promise<void> => {
         };
         const newPetitionId = await addPetitionModel(petition);
         for (const tier of supportTiers) {
-            tier.petitionId = newPetitionId;
+            tier.petition_id = newPetitionId;
             await addSupportTierData(tier);
         }
         respCustom(res, 201, "Created").json({petitionId: newPetitionId}).send();
@@ -179,7 +210,15 @@ const editPetition = async (req: Request, res: Response): Promise<void> => {
             return;
         }
         const {title, description, categoryId} = req.body;
+        if (title !== undefined && !validateEmailLength(title, 0, 80)) {
+            respCustom(res, 400, "Bad Request").send();
+            return;
+        }
         if (title && await doesSupportTierExistByTitle(title)) {
+            respCustom(res, 400, "Bad Request").send();
+            return;
+        }
+        if (description === "") {
             respCustom(res, 400, "Bad Request").send();
             return;
         }
@@ -216,6 +255,10 @@ const deletePetition = async (req: Request, res: Response): Promise<void> => {
             return;
         }
         const petitionsOne = await findPetitionById(petitionId);
+        if (petitionsOne == null) {
+            respCustom(res, 404, "No Found").send();
+            return;
+        }
         const supporters = await findAllSupporters();
         if (petitionsOne.ownerId !== req.userId) {
             respCustom(res, 403, "Only the owner of a petition may delete it").send();
@@ -225,7 +268,7 @@ const deletePetition = async (req: Request, res: Response): Promise<void> => {
             respCustom(res, 403, "Can not delete a petition with one or more supporters").send();
             return;
         }
-        await deletePetitionById(petitionsOne.id);
+        await deletePetitionById(petitionsOne.petitionId);
         respCustom(res, 200, "Success").send();
         return;
     } catch (err) {

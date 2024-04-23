@@ -20,7 +20,7 @@ import {
 
 const register = async (req: Request, res: Response): Promise<void> => {
     try {
-        const {valid, missingFields} = validateRequiredFields(req, ['firstName', 'lastName', 'email', 'password']);
+        const {valid, missingFields} = validateRequiredFields(req.body, ['firstName', 'lastName', 'email', 'password']);
         if (!valid) {
             respCustom(res, 400, "Invalid information").send();
             return;
@@ -65,7 +65,7 @@ const register = async (req: Request, res: Response): Promise<void> => {
 
 const login = async (req: Request, res: Response): Promise<void> => {
     try {
-        const {valid, missingFields} = validateRequiredFields(req, ['email', 'password']);
+        const {valid, missingFields} = validateRequiredFields(req.body, ['email', 'password']);
         if (!valid) {
             respCustom(res, 400, "Invalid information").send();
             return;

@@ -32,6 +32,7 @@ const getAllSupportersForPetition = async (req: Request, res: Response): Promise
                 timestamp: supporter.timestamp
             };
         }));
+        supporterDetails.reverse();
         res.json(supporterDetails);
         return;
     } catch (err) {

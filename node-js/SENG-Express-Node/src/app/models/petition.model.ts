@@ -3,7 +3,7 @@ import {getPool} from "../../config/db";
 import {SupportTier} from "./support_tier.model";
 
 interface Petition {
-    id?: number;
+    petitionId?: number;
     title: string;
     description: string;
     creationDate: Date;
@@ -11,14 +11,38 @@ interface Petition {
     ownerId: number;
     categoryId: number;
     tierList?: SupportTier[]
-    SupportingCost?: number
+    supportingCost?: number
+    ownerFirstName?: string
+    ownerLastName?: string
 }
 
 const findAllPetitions = async (): Promise<Petition[]> => {
     const sql = 'SELECT * FROM `petition` ORDER BY `creation_date` ASC';
     try {
         const [rows] = await getPool().query(sql);
-        return rows as Petition[];
+        const petitions = rows.map((row: any) => ({
+            petitionId: row.id,
+            title: row.title,
+            description: row.description,
+            creationDate: new Date(row.creation_date),
+            imageFilename: row.image_filename,
+            ownerId: row.owner_id,
+            categoryId: row.category_id,
+        })) as Petition[];
+        const ownerIds = [...new Set(petitions.map(petition => petition.ownerId))];
+        const usersSql = `SELECT id, first_name, last_name
+                          FROM user
+                          WHERE id IN (${ownerIds.join(',')})`;
+        const [users] = await getPool().query(usersSql);
+        const usersMap = users.reduce((acc: { [x: string]: any; }, user: { id: string | number; }) => {
+            acc[user.id] = user;
+            return acc;
+        }, {});
+        return petitions.map(petition => ({
+            ...petition,
+            ownerFirstName: usersMap[petition.ownerId]?.first_name,
+            ownerLastName: usersMap[petition.ownerId]?.last_name,
+        }));
     } catch (err) {
         Logger.error(err.sql);
         throw err;
@@ -30,7 +54,29 @@ const findPetitionById = async (id: number): Promise<Petition | null> => {
     try {
         const [rows] = await getPool().query(sql, [id]);
         if (rows.length > 0) {
-            return rows[0] as Petition;
+            const petitions = rows.map((row: any) => ({
+                petitionId: row.id,
+                title: row.title,
+                description: row.description,
+                creationDate: new Date(row.creation_date),
+                imageFilename: row.image_filename,
+                ownerId: row.owner_id,
+                categoryId: row.category_id,
+            })) as Petition[];
+            const ownerIds = [...new Set(petitions.map(petition => petition.ownerId))];
+            const usersSql = `SELECT id, first_name, last_name
+                              FROM user
+                              WHERE id IN (${ownerIds.join(',')})`;
+            const [users] = await getPool().query(usersSql);
+            const usersMap = users.reduce((acc: { [x: string]: any; }, user: { id: string | number; }) => {
+                acc[user.id] = user;
+                return acc;
+            }, {});
+            return petitions.map(petition => ({
+                ...petition,
+                ownerFirstName: usersMap[petition.ownerId]?.first_name,
+                ownerLastName: usersMap[petition.ownerId]?.last_name,
+            }))[0];
         } else {
             return null;
         }
@@ -65,7 +111,7 @@ const addPetitionModel = async (petition: Petition): Promise<number> => {
 const updatePetition = async (petition: Petition): Promise<void> => {
     const sql = 'UPDATE `petition` SET `title` = ?, `description` = ?, `creation_date` = ?, `image_filename` = ?, `owner_id` = ?, `category_id` = ? WHERE `id` = ?';
     try {
-        await getPool().query(sql, [petition.title, petition.description, petition.creationDate, petition.imageFilename, petition.ownerId, petition.categoryId, petition.id]);
+        await getPool().query(sql, [petition.title, petition.description, petition.creationDate, petition.imageFilename, petition.ownerId, petition.categoryId, petition.petitionId]);
     } catch (err) {
         Logger.error(err.sql);
         throw err;

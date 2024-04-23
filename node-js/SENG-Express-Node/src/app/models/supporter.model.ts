@@ -14,7 +14,14 @@ const findAllSupporters = async (): Promise<Supporter[]> => {
     const sql = 'SELECT * FROM `supporter`';
     try {
         const [rows] = await getPool().query(sql);
-        return rows as Supporter[];
+        return rows.map((row: any) => ({
+            id: row.id,
+            petitionId: row.petition_id,
+            supportTierId: row.support_tier_id,
+            userId: row.user_id,
+            message: row.message,
+            timestamp: new Date(row.timestamp),
+        })) as Supporter[];
     } catch (err) {
         Logger.error(err.sql);
         throw err;
@@ -25,7 +32,14 @@ const findSupportersByPetitionId = async (petitionId: number): Promise<Supporter
     const sql = 'SELECT * FROM `supporter` WHERE `petition_id` = ?';
     try {
         const [rows] = await getPool().query(sql, [petitionId]);
-        return rows as Supporter[];
+        return rows.map((row: any) => ({
+            id: row.id,
+            petitionId: row.petition_id,
+            supportTierId: row.support_tier_id,
+            userId: row.user_id,
+            message: row.message,
+            timestamp: new Date(row.timestamp),
+        })) as Supporter[];
     } catch (err) {
         Logger.error(err.sql);
         throw err;
